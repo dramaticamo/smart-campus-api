@@ -17,11 +17,12 @@ public class SmartCampusApi {
     .register(com.smartcampus.resource.SensorResource.class);
 
     return GrizzlyHttpServerFactory.createHttpServer(
-            URI.create(BASE_URI + "api/v1/"), rc);
+            URI.create(BASE_URI), rc);
 }
 
     public static void main(String[] args) {
-        final HttpServer server = startServer();
-        System.out.println("Server started at " + BASE_URI + "api/v1");
-    }
+    final HttpServer server = startServer();
+    System.out.println("Server started at http://localhost:8080/");
+    System.out.println("API available at http://localhost:8080/api/v1/");
+}
 }

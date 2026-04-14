@@ -8,6 +8,17 @@ public class Sensor {
     private String id;
     private String type;
     private String roomId;
+    private String status; // ACTIVE, MAINTENANCE, OFFLINE
+    
+    private double currentValue;
+
+    public double getCurrentValue() {
+        return currentValue;
+    }
+
+    public void setCurrentValue(double currentValue) {
+        this.currentValue = currentValue;
+    }
 
     // ✅ NEW: readings list
     private List<SensorReading> readings = new ArrayList<>();
@@ -18,6 +29,14 @@ public class Sensor {
         this.id = id;
         this.type = type;
         this.roomId = roomId;
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     // getters & setters

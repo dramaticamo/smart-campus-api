@@ -6,6 +6,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.PUT;
+import com.smartcampus.exception.RoomNotEmptyException;
 
 import java.util.*;
 
@@ -25,18 +26,30 @@ public class RoomResource {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Room getRoomById(@PathParam("id") String id) {
-        System.out.println("Requested ID: " + id); // debug
-        return rooms.get(id);
+    public Response getRoomById(@PathParam("id") String id) {
+
+        Room room = rooms.get(id);
+
+        if (room == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(Map.of("error", "Room not found"))
+                    .build();
+        }
+
+        return Response.ok(room).build();
     }
 
     // ✅ POST create room
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Room createRoom(Room room) {
+    public Response createRoom(Room room) {
+
         rooms.put(room.getId(), room);
-        return room;
+
+        return Response.status(Response.Status.CREATED)
+                .entity(room)
+                .build();
     }
     
     @PUT
@@ -73,9 +86,7 @@ public class RoomResource {
         }
 
         if (!room.getSensorIds().isEmpty()) {
-            return Response.status(Response.Status.CONFLICT)
-                    .entity(Map.of("error", "Cannot delete room with sensors"))
-                    .build();
+            throw new RoomNotEmptyException("Cannot delete room with sensors");
         }
 
         rooms.remove(id);
