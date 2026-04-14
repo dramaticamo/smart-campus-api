@@ -8,20 +8,20 @@ import java.net.URI;
 
 public class SmartCampusApi {
 
-    public static final String BASE_URI = "http://localhost:8080/";
+    public static final String BASE_URI = "http://localhost:8080/api/v1/";
 
     public static HttpServer startServer() {
-    final ResourceConfig rc = new ResourceConfig()
-    .register(com.smartcampus.resource.DiscoveryResource.class)
-    .register(com.smartcampus.resource.RoomResource.class)
-    .register(com.smartcampus.resource.SensorResource.class);
+        final ResourceConfig rc = new ResourceConfig()
+                .packages("com.smartcampus.resource",
+                          "com.smartcampus.exception",
+                          "com.smartcampus.filter");
 
-    return GrizzlyHttpServerFactory.createHttpServer(
-            URI.create(BASE_URI + "api/v1/"), rc);
-}
+        return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
+    }
 
     public static void main(String[] args) {
         final HttpServer server = startServer();
-        System.out.println("Server started at " + BASE_URI + "api/v1");
+        System.out.println("Smart Campus API started at " + BASE_URI);
+        System.out.println("Press Ctrl+C to stop the server...");
     }
 }
