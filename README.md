@@ -4,68 +4,70 @@ This project is a RESTful API built using JAX-RS (Jersey) for managing rooms and
 
 ## Features
 
-* Room management (create, get, update, delete)
-* Sensor management (linked to rooms)
-* Prevent deleting rooms with sensors
-* JSON request/response handling
+### Room Management
+- Create, retrieve, update, and delete rooms
+- Each room has:
+  - id
+  - name
+  - capacity
+  - sensorIds
 
-## Technologies Used
+### Sensor Management
+- Create and retrieve sensors
+- Filter sensors by roomId
+- Each sensor has:
+  - id
+  - type
+  - roomId
 
-* Java
-* JAX-RS (Jersey)
-* Maven
-* NetBeans
+### Sensor Readings (Sub-resource)
+- Add readings to a sensor
+- Retrieve all readings for a sensor
+- Each reading contains:
+  - value
+  - timestamp
 
 ## API Endpoints
 
 ### Rooms
-
-GET all rooms:
-GET /api/v1/rooms
-
-GET room by ID:
-GET /api/v1/rooms/{id}
-
-CREATE room:
-POST /api/v1/rooms
-
-UPDATE room:
-PUT /api/v1/rooms/{id}
-
-DELETE room:
-DELETE /api/v1/rooms/{id}
-
----
+- GET /rooms
+- POST /rooms
+- GET /rooms/{id}
+- PUT /rooms/{id}
+- DELETE /rooms/{id}
 
 ### Sensors
+- GET /sensors
+- GET /sensors?roomId=R1
+- POST /sensors
 
-CREATE sensor:
-POST /api/v1/sensors
+### Sensor Readings
+- POST /sensors/{id}/readings
+- GET /sensors/{id}/readings
 
-DELETE sensor:
-DELETE /api/v1/sensors/{id}
+## Example JSON
 
----
-
-## Example (Postman)
-
-Create Room:
+### Create Room
 {
-"id": "R1",
-"name": "Library",
-"capacity": 50
+  "id": "R1",
+  "name": "Library",
+  "capacity": 100
 }
 
-Create Sensor:
+### Create Sensor
 {
-"id": "S1",
-"type": "temperature",
-"roomId": "R1"
+  "id": "S1",
+  "type": "temperature",
+  "roomId": "R1"
 }
 
----
+### Add Reading
+{
+  "value": 25.5,
+  "timestamp": 1710000000
+}
 
-## Notes
-
-* Rooms cannot be deleted if sensors are attached
-* Sensors must belong to an existing room
+## Technologies
+- Java
+- JAX-RS (Jersey)
+- Maven
