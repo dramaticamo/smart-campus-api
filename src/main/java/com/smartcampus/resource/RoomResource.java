@@ -4,6 +4,8 @@ import com.smartcampus.model.Room;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.PUT;
 
 import java.util.*;
 
@@ -72,7 +74,7 @@ public class RoomResource {
 
         if (!room.getSensorIds().isEmpty()) {
             return Response.status(Response.Status.CONFLICT)
-                    .entity(Map.of("error", "Room does not exist"))
+                    .entity(Map.of("error", "Cannot delete room with sensors"))
                     .build();
         }
 

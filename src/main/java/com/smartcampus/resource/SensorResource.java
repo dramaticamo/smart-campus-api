@@ -5,6 +5,7 @@ import com.smartcampus.model.Room;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import com.smartcampus.model.SensorReading;
 
 import java.util.*;
 
@@ -26,7 +27,6 @@ public class SensorResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createSensor(Sensor sensor) {
 
-        // 🔥 IMPORTANT RULE: room must exist
         Room room = RoomResource.rooms.get(sensor.getRoomId());
 
         if (room == null) {
@@ -37,10 +37,44 @@ public class SensorResource {
 
         sensors.put(sensor.getId(), sensor);
 
-        // 🔥 Link sensor to room
         room.getSensorIds().add(sensor.getId());
 
         return Response.ok(sensor).build();
+    }
+    
+    @POST
+    @Path("/{id}/readings")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addReading(@PathParam("id") String id, SensorReading reading) {
+
+        Sensor sensor = sensors.get(id);
+
+        if (sensor == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Sensor not found")
+                    .build();
+        }
+
+        sensor.getReadings().add(reading);
+
+        return Response.ok(sensor).build();
+    }
+    
+    @GET
+    @Path("/{id}/readings")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getReadings(@PathParam("id") String id) {
+
+        Sensor sensor = sensors.get(id);
+
+        if (sensor == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Sensor not found")
+                    .build();
+        }
+
+        return Response.ok(sensor.getReadings()).build();
     }
     
     @DELETE
