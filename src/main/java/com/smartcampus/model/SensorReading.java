@@ -1,14 +1,31 @@
 package com.smartcampus.model;
 
+// represents a single reading from a sensor
+// for example temperature or CO2 value at a specific time
 public class SensorReading {
-    private double value;
-    private long timestamp;
 
+    private String id;      // unique reading ID
+    private double value;   // measured value
+    private long timestamp; // time of reading (epoch time)
+
+    // default constructor (needed for JSON)
     public SensorReading() {}
 
-    public SensorReading(double value, long timestamp) {
+    // constructor to create a reading with all fields
+    public SensorReading(String id, double value, long timestamp) {
+        this.id = id;
         this.value = value;
         this.timestamp = timestamp;
+    }
+
+    // getters and setters
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public double getValue() {

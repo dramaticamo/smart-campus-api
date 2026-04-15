@@ -6,24 +6,26 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import com.smartcampus.exception.SensorUnavailableException;
-import com.smartcampus.resource.SensorResource;
 
 import java.util.List;
 
+// handles sensor readings as a sub-resource of Sensor
 public class SensorReadingResource {
 
-    private String sensorId;
+    private String sensorId; // ID of the sensor this resource belongs to
 
     public SensorReadingResource(String sensorId) {
         this.sensorId = sensorId;
     }
 
+    // get all readings for a specific sensor
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getReadings() {
 
         Sensor sensor = SensorResource.getSensorsMap().get(sensorId);
 
+        // return 404 if sensor not found
         if (sensor == null) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("Sensor not found")
@@ -33,6 +35,7 @@ public class SensorReadingResource {
         return Response.ok(sensor.getReadings()).build();
     }
 
+    // add a new reading to a sensor
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -40,20 +43,22 @@ public class SensorReadingResource {
 
         Sensor sensor = SensorResource.getSensorsMap().get(sensorId);
 
+        // return 404 if sensor not found
         if (sensor == null) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("Sensor not found")
                     .build();
         }
-        
+
+        // check if sensor is under maintenance
         if ("MAINTENANCE".equalsIgnoreCase(sensor.getStatus())) {
             throw new SensorUnavailableException("Sensor is under maintenance");
         }
 
-        // add reading
+        // add reading to list
         sensor.getReadings().add(reading);
 
-        // 🔥 IMPORTANT: update current value
+        // update current value with latest reading
         sensor.setCurrentValue(reading.getValue());
 
         return Response.ok(sensor).build();
